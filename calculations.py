@@ -45,10 +45,10 @@ def check_movement_range(list1, list2):
     #     return True
     
     # Wrist
-    if list1[15] - list2[15] not in range(-15,15):
+    if list1[15] - list2[15] not in range(-10,11):
         # print("wrist: {}".format(list1[15]-list2[15])) 
         return True
-    elif list1[16] - list2[16] not in range(-15,15): 
+    elif list1[16] - list2[16] not in range(-10,11): 
         # print("wrist: {}".format(list1[16]-list2[16]))
         return True
     
@@ -61,10 +61,10 @@ def check_movement_range(list1, list2):
     #     return True
 
     # Knee
-    elif list1[25] - list2[25] not in range(-30,30): 
+    elif list1[25] - list2[25] not in range(-20,21): 
         # print('knee: {}'.format(list1[25]-list2[25]))
         return True
-    elif list1[26] - list2[26] not in range(-30,30):
+    elif list1[26] - list2[26] not in range(-20,21):
         # print('knee: {}'.format(list1[26]-list2[26])) 
         return True
 

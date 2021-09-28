@@ -14,7 +14,7 @@ mixer.init()
 
 
 def theme_sound():
-    mixer.music.load('sounds/theme.wav')
+    mixer.music.load('sounds/theme2.wav')
     mixer.music.play(-1)
 
 
@@ -56,7 +56,7 @@ class Thread(QThread):
         self.cap.release()
 
     def run(self):
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
         # mpDraw = mp.solutions.drawing_utils
         mpPose = mp.solutions.pose
         pose = mpPose.Pose()
@@ -85,29 +85,30 @@ class Thread(QThread):
                         current_x_cord.append(cx)
                         current_y_cord.append(cy)
 
-                    # with open('x_cordinates.csv', 'a', encoding='UTF8') as f:
-                    #     writer = csv.writer(f) 
-                    #     writer.writerow(current_x_cord)
+                    with open('x_cordinates.csv', 'a', encoding='UTF8') as f:
+                        writer = csv.writer(f) 
+                        writer.writerow(current_x_cord)
                     
-                    # with open('y_cordinates.csv', 'a', encoding='UTF8') as f:
-                    #     writer = csv.writer(f) 
-                    #     writer.writerow(current_y_cord)
+                    with open('y_cordinates.csv', 'a', encoding='UTF8') as f:
+                        writer = csv.writer(f) 
+                        writer.writerow(current_y_cord)
 
                     pt1, pt2 = bounding_box_cordinates(x_cord_list=current_x_cord, y_cord_list=current_y_cord)
 
-                    cv2.rectangle(frame, pt1, pt2, (0,255,0), 3)
 
                     if check_movement_range(list1=previous_x_cord, list2=current_x_cord) or check_movement_range(list1=previous_y_cord, list2=current_y_cord):
-                        if count < 20:
+                        if count < 10:
                             movement_detected_sound()
-                        if count > 20:
+                        if count > 10:
                             gun_shoot_sound()
                         pt1, pt2 = bounding_box_cordinates(x_cord_list=current_x_cord, y_cord_list=current_y_cord)
 
                         cv2.rectangle(frame, pt1, pt2, (0,0,255), 6)
-                        cv2.putText(frame, " ELIMINATED!", (int(pt1[0]),int(pt2[1]/2)), cv2.FONT_HERSHEY_PLAIN, 3, (0,0,255), 4)
+                        cv2.putText(frame, " MOTION DETECTED!", (int(pt1[0]),int(pt2[1]/2)), cv2.FONT_HERSHEY_PLAIN, 2, (0,0,255), 4)
 
                         count += 1
+
+                    else: cv2.rectangle(frame, pt1, pt2, (0,255,0), 3)
 
             except AttributeError: pass
             except Exception as error: pass
@@ -174,13 +175,14 @@ class App(QMainWindow):
 
         self.red_light.setHidden(True)
 
-        self.setStyleSheet("background-color: lightblue;")
         self.show()
 
     def setImage(self, image):
         self.label.setPixmap(QPixmap.fromImage(image))
 
     def start_game(self):
+
+        self.setStyleSheet("background-color: lightblue;")
 
         click_sound()
 
@@ -232,11 +234,11 @@ class App(QMainWindow):
 
         scanning_sound()
 
-        QtCore.QTimer.singleShot(6000, loop.quit)
+        QtCore.QTimer.singleShot(7000, loop.quit)
         loop.exec_()
 
         th.stop()
-        
+
         self.red_light.setHidden(True)
 
         self.label.setHidden(True)
